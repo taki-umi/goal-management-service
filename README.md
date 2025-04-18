@@ -1,19 +1,58 @@
-# Read Me First
-The following was discovered as part of building this project:
+# Goal Management Service
 
-* The original package name 'com.example.goal-achieve' is invalid and this project uses 'com.example.goal_achieve' instead.
+## ディレクトリ構成
+DDD & gRPC構成
 
-# Getting Started
-
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.4/gradle-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.4.4/gradle-plugin/packaging-oci-image.html)
-
-### Additional Links
-These additional references should also help you:
-
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-
+```
+src/
+├── main/
+│   ├── kotlin/
+│   │   └── com/
+│   │       └── example/
+│   │           └── goal_achieve/
+│   │               ├── GoalAchieveApplication.kt
+│   │               ├── application/                     # アプリケーション層
+│   │               │   └── service/                    
+│   │               │       └── GoalApplicationService.kt # ユースケース実装
+│   │               ├── domain/                          # ドメイン層
+│   │               │   ├── model/                      
+│   │               │   │   ├── Goal.kt                  # エンティティ
+│   │               │   │   └── GoalStatus.kt            # 値オブジェクト
+│   │               │   ├── service/                    
+│   │               │   │   └── GoalDomainService.kt     # ドメインサービス
+│   │               │   └── repository/                 
+│   │               │       └── GoalRepository.kt        # リポジトリインターフェース
+│   │               └── infrastructure/                  # インフラストラクチャ層
+│   │                   ├── persistence/                
+│   │                   │   ├── entity/                 
+│   │                   │   │   └── GoalEntity.kt        # DB用エンティティ
+│   │                   │   ├── repository/             
+│   │                   │   │   └── GoalJpaRepository.kt # Spring Data JPA
+│   │                   │   └── GoalRepositoryImpl.kt    # リポジトリ実装
+│   │                   └── grpc/                       
+│   │                       ├── mapper/                 
+│   │                       │   └── GoalMapper.kt        # ドメイン<->gRPC変換
+│   │                       └── service/                
+│   │                           └── GoalGrpcService.kt   # gRPCサービス実装
+│   ├── proto/                                           # Protocol Buffers定義
+│   │   └── goal.proto
+│   └── resources/
+│       └── application.yml
+└── test/
+    └── kotlin/
+        └── com/
+            └── example/
+                └── goal_achieve/
+                    ├── domain/
+                    │   └── model/
+                    │       └── GoalTest.kt
+                    ├── application/
+                    │   └── service/
+                    │       └── GoalApplicationServiceTest.kt
+                    └── infrastructure/
+                        ├── persistence/
+                        │   └── GoalRepositoryImplTest.kt
+                        └── grpc/
+                            └── service/
+                                └── GoalGrpcServiceTest.kt
+```

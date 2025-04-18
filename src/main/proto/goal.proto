@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package com.example.goal_achieve;
+
+option java_multiple_files = true;
+option java_package = "com.example.goal_achieve.infrastructure.grpc.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+// ゴール管理サービス
+service GoalService {
+  // ゴール作成
+  rpc CreateGoal(CreateGoalRequest) returns (GoalResponse);
+
+  // ゴール取得
+  rpc GetGoal(GoalIdRequest) returns (GoalResponse);
+
+  // ユーザーのゴール一覧取得
+  rpc GetGoalsByUserId(UserIdRequest) returns (GoalsResponse);
+
+  // ユーザーのゴール一覧をステータスでフィルタリング
+  rpc GetGoalsByUserIdAndStatus(UserIdStatusRequest) returns (GoalsResponse);
+
+  // サブゴール一覧取得
+  rpc GetGoalsByParentGoalId(ParentGoalIdRequest) returns (GoalsResponse);
+
+  // おすすめゴール取得
+  rpc GetRecommendedGoals(RecommendedGoalsRequest) returns (GoalsResponse);
+
+  // ゴール更新
+  rpc UpdateGoal(UpdateGoalRequest) returns (GoalResponse);
+
+  // 進捗更新
+  rpc UpdateProgress(UpdateProgressRequest) returns (GoalResponse);
+
+  // ゴール削除
+  rpc DeleteGoal(GoalIdRequest) returns (google.protobuf.Empty);
+
+  // ゴール達成状況をストリーミング (双方向ストリーミング例)
+  rpc StreamGoalProgress(stream GoalProgressUpdate) returns (stream GoalProgressResponse);
+}
+
+// ゴール作成リクエスト
+message CreateGoalRequest {
+  string user_id = 1;
+  string title = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.StringValue category = 4;
+  google.protobuf.Timestamp target_date = 5;
+  google.protobuf.StringValue parent_goal_id = 6;
+}
+
+// ゴールID指定リクエスト
+message GoalIdRequest {
+  string id = 1;
+}
+
+// ユーザーID指定リクエスト
+message UserIdRequest {
+  string user_id = 1;
+}
+
+// ユーザーIDとステータス指定リクエスト
+message UserIdStatusRequest {
+  string user_id = 1;
+  string status = 2;
+}
+
+// 親ゴールID指定リクエスト
+message ParentGoalIdRequest {
+  string parent_goal_id = 1;
+}
+
+// おすすめゴール取得リクエスト
+message RecommendedGoalsRequest {
+  string user_id = 1;
+  int32 limit = 2;
+}
+
+// ゴール更新リクエスト
+message UpdateGoalRequest {
+  string id = 1;
+  google.protobuf.StringValue title = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.StringValue category = 4;
+  google.protobuf.Timestamp target_date = 5;
+  google.protobuf.StringValue status = 6;
+}
+
+// 進捗更新リクエスト
+message UpdateProgressRequest {
+  string id = 1;
+  int32 progress = 2;
+}
+
+// ゴール進捗更新ストリーミングリクエスト
+message GoalProgressUpdate {
+  string id = 1;
+  int32 progress = 2;
+  string user_id = 3;
+}
+
+// ゴール進捗ストリーミングレスポンス
+message GoalProgressResponse {
+  string id = 1;
+  int32 progress = 2;
+  string status = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// ゴールレスポンス
+message GoalResponse {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  google.protobuf.StringValue description = 4;
+  google.protobuf.StringValue category = 5;
+  google.protobuf.Timestamp target_date = 6;
+  string status = 7;
+  int32 progress = 8;
+  google.protobuf.StringValue parent_goal_id = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// 複数ゴールレスポンス
+message GoalsResponse {
+  repeated GoalResponse goals = 1;
+}
