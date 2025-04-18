@@ -1,5 +1,5 @@
 // Goal.kt
-package com.goalapp.goal.domain.model
+package com.example.goal_achieve.domain.model
 
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -18,6 +18,7 @@ data class Goal(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()
 ) {
+
     fun updateProgress(newProgress: Int): Goal {
         require(newProgress in 0..100) { "Progress must be between 0 and 100" }
         return this.copy(
