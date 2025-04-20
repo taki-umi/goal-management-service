@@ -30,7 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-	implementation("org.flywaydb:flyway-core")
+	implementation ("org.flywaydb:flyway-database-postgresql:latest.release")
 
 	// Kotlin
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
