@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.google.protobuf.gradle.*
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -7,15 +6,6 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.25"
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
-	// id("com.github.pseudomuto.protoc-gen-doc") version "1.6.0"
-
-	// gRPC用
-	id("com.google.protobuf") version "0.9.4"
-}
-
-repositories {
-	gradlePluginPortal()
-	google()
 }
 
 group = "com.example"
@@ -32,9 +22,6 @@ repositories {
 }
 
 val coroutinesVersion = "1.7.3"
-val grpcVersion = "1.57.2"
-val grpcKotlinVersion = "1.3.0"
-val protobufVersion = "3.24.0"
 
 dependencies {
 	// Spring Boot
@@ -53,54 +40,14 @@ dependencies {
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 
-	// gRPC
-	implementation("io.grpc:grpc-protobuf:$grpcVersion")
-	implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
-	implementation("io.grpc:grpc-netty-shaded:$grpcVersion")
-	implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-	implementation("net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE")
+	// Swagger/OpenAPI
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-	testImplementation("io.grpc:grpc-testing:$grpcVersion")
 	testRuntimeOnly("com.h2database:h2")  // テスト用のH2データベース
-}
-
-protobuf {
-	protoc {
-		artifact = "com.google.protobuf:protoc:$protobufVersion"
-	}
-}
-
-sourceSets {
-	main {
-		proto {
-			srcDir("src/main/proto")
-		}
-	}
-}
-
-// gRPC APIドキュメント生成タスク
-tasks.register<com.google.protobuf.gradle.GenerateProtoTask>("generateGrpcDocs") {
-	dependsOn("generateProto")
-
-	val docOutDir = "$buildDir/generated/docs"
-
-	outputs.dir(docOutDir)
-
-	doLast {
-		exec {
-			commandLine(
-				"protoc",
-				"--proto_path=src/main/proto",
-				"--doc_out=$docOutDir",
-				"--doc_opt=markdown,api.md",
-				"src/main/proto/goal.proto"
-			)
-		}
-	}
 }
 
 tasks.withType<KotlinCompile> {
@@ -120,7 +67,7 @@ tasks.withType<Test> {
 	systemProperty("spring.flyway.enabled", "false")  // Flywayを無効化
 }
 
-// Dokkaによるドキュメント生成
+// Dokkaによるドキュメント生成（オプション）
 buildscript {
 	dependencies {
 		classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.8.10")
@@ -129,14 +76,12 @@ buildscript {
 
 apply(plugin = "org.jetbrains.dokka")
 
-// ドキュメント生成タスク
-tasks.register("generateAllDocs") {
-	dependsOn("dokkaHtml", "generateGrpcDocs")
+tasks.register("generateDocs") {
+	dependsOn("dokkaHtml")
 
 	doLast {
 		println("ドキュメント生成完了")
 		println("Dokkaドキュメント: $buildDir/dokka/html")
-		println("gRPC APIドキュメント: $buildDir/generated/docs")
 	}
 }
 

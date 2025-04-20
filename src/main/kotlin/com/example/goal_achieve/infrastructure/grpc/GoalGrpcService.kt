@@ -2,13 +2,26 @@
 //
 //import com.example.goal_achieve.application.service.GoalApplicationService
 //import com.example.goal_achieve.infrastructure.grpc.mapper.GoalMapper
-//import com.example.goal_achieve.infrastructure.grpc.proto.*
+//import com.example.goal_achieve.infrastructure.grpc.proto.CreateGoalRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalIdRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalProgressResponse
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalProgressUpdate
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalResponse
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalServiceGrpc
+//import com.example.goal_achieve.infrastructure.grpc.proto.GoalsResponse
+//import com.example.goal_achieve.infrastructure.grpc.proto.ParentGoalIdRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.RecommendedGoalsRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.UpdateGoalRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.UpdateProgressRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.UserIdRequest
+//import com.example.goal_achieve.infrastructure.grpc.proto.UserIdStatusRequest
 //import com.google.protobuf.Empty
 //import io.grpc.Status
 //import io.grpc.stub.StreamObserver
 //import kotlinx.coroutines.CoroutineScope
 //import kotlinx.coroutines.Dispatchers
 //import kotlinx.coroutines.flow.MutableSharedFlow
+//import kotlinx.coroutines.flow.collect
 //import kotlinx.coroutines.flow.filter
 //import kotlinx.coroutines.launch
 //import net.devh.boot.grpc.server.service.GrpcService
